@@ -59,8 +59,8 @@ public final class Number implements Arithmetic {
 
     @Override
     public Number sum(Number number) {
-        if (this.isDecimal() || number.isDecimal()) return Number.of(this.asDecimal() + number.asDecimal());
-        return Number.of(this.asInt() + number.asInt());
+        if (isDecimal() || number.isDecimal()) return Number.of(asDecimal() + number.asDecimal());
+        return Number.of(asInt() + number.asInt());
     }
 
     public static Number sum(List<Number> numbers) {
@@ -78,7 +78,21 @@ public final class Number implements Arithmetic {
 
     @Override
     public Number sub(Number number) {
-        return null;
+        if (isDecimal() || number.isDecimal()) return Number.of(asDecimal() - number.asDecimal());
+        return Number.of(asInt() - number.asInt());
+    }
+
+    public static Number sub(List<Number> numbers) {
+        if (numbers.isEmpty()) return Number.of(0);
+        if (numbers.size() == 1) return Number.of(numbers.getFirst());
+        return numbers.getFirst().subNumbers(numbers.subList(1, numbers.size()));
+    }
+
+    @Override
+    public Number subNumbers(List<Number> numbers) {
+        Number result = Number.of(this);
+        for (Number number : numbers) result = result.sub(number);
+        return result;
     }
 
     @Override
