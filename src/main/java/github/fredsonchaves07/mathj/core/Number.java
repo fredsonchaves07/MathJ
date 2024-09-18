@@ -36,6 +36,7 @@ public final class Number implements Arithmetic {
     }
 
     public static Number of(double value) {
+        if (String.valueOf(value).contains(".0")) return new Number((int) value);
         return new Number(value);
     }
 
@@ -69,8 +70,7 @@ public final class Number implements Arithmetic {
         return numbers.getFirst().sumNumbers(numbers.subList(1, numbers.size()));
     }
 
-    @Override
-    public Number sumNumbers(List<Number> numbers) {
+    private Number sumNumbers(List<Number> numbers) {
         Number result = Number.of(this);
         for (Number number : numbers) result = result.sum(number);
         return result;
@@ -88,40 +88,63 @@ public final class Number implements Arithmetic {
         return numbers.getFirst().subNumbers(numbers.subList(1, numbers.size()));
     }
 
-    @Override
-    public Number subNumbers(List<Number> numbers) {
+    private Number subNumbers(List<Number> numbers) {
         Number result = Number.of(this);
         for (Number number : numbers) result = result.sub(number);
         return result;
     }
 
     @Override
-    public Number dub(List<Number> numbers) {
-        return null;
-    }
-
-    @Override
     public Number mult(Number number) {
-        return null;
+        if (isDecimal() || number.isDecimal()) return Number.of(asDecimal() * number.asDecimal());
+        return Number.of(asInt() * number.asInt());
     }
 
-    @Override
-    public Number mult(List<Number> numbers) {
-        return null;
+    public static Number mult(List<Number> numbers) {
+        if (numbers.isEmpty()) return Number.of(0);
+        if (numbers.size() == 1) return Number.of(numbers.getFirst());
+        return numbers.getFirst().multNumbers(numbers.subList(1, numbers.size()));
+    }
+
+    private Number multNumbers(List<Number> numbers) {
+        Number result = Number.of(this);
+        for (Number number : numbers) result = result.mult(number);
+        return result;
     }
 
     @Override
     public Number div(Number number) {
-        return null;
+        if (number.isZero()) throw new RuntimeException("It should not be possible to divide by zero");
+        return Number.of(asDecimal() / number.asDecimal());
     }
 
-    @Override
-    public Number div(List<Number> numbers) {
-        return null;
+    public static Number div(List<Number> numbers) {
+        if (numbers.isEmpty()) return Number.of(0);
+        if (numbers.size() == 1) return Number.of(numbers.getFirst());
+        return numbers.getFirst().divNumbers(numbers.subList(1, numbers.size()));
+    }
+
+    private Number divNumbers(List<Number> numbers) {
+        Number result = Number.of(this);
+        for (Number number : numbers) {
+            if (number.isZero()) throw new RuntimeException("It should not be possible to divide by zero");
+            result = result.div(number);
+        }
+        return result;
     }
 
     @Override
     public boolean isDecimal() {
-        return value.contains(".");
+        return value.contains(".") && !value.contains(".0");
+    }
+
+    @Override
+    public boolean isInt() {
+        return !isDecimal();
+    }
+
+    @Override
+    public boolean isZero() {
+        return value.equals("0");
     }
 }
