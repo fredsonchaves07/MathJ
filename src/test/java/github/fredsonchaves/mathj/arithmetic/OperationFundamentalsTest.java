@@ -107,7 +107,7 @@ public class OperationFundamentalsTest {
     }
 
     @Test
-    public void shoudNotBeDivByZero() {
+    public void shouldNotBeDivByZero() {
         Number number1 = Number.of(910.658);
         Number number2 = Number.of(0);
         assertThrows(

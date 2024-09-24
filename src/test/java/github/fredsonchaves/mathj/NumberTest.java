@@ -1,4 +1,4 @@
-package github.fredsonchaves.mathj.arithmetic;
+package github.fredsonchaves.mathj;
 
 import github.fredsonchaves07.mathj.core.Number;
 import org.junit.jupiter.api.Test;
